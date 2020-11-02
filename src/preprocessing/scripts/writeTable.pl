@@ -56,7 +56,6 @@ my $nodefile = shift;
 open(my $outf, ">>", $streetfile);
 open(my $outn, ">>", $nodefile);
 
-#my $nodeopen = 0; #opened a node tag
 my $wayopen = 0; #opened a way tag
 my $curwid = "NA";
 my @curreflist = ();
@@ -94,7 +93,6 @@ my $and = "\&";
 my $dollar = "\$";
 
 open FA,"<$infile" or die "can't open $infile\n";
-#binmode FA, ':utf8';
 while(<FA>){
     chomp;
     my $line=$_;
@@ -124,23 +122,19 @@ while(<FA>){
 	#<way id=""
 	$curwid = substr($L[1],4,-1);
 	$curwid =~ s/\Q$feet\E//g;
-#	print STDERR "$curwid\n";
     }
     elsif($wayopen == 1){
 	if($line =~ /^<nd ref/){
 	    my $nid = substr($line,9,-3);
-#	    print STDERR "node ref $nid\n";
 	    push @curreflist, $nid;
 	}
 	if($line =~ /^<tag/){
-#	    print STDERR "start with tag\n";
 	    my @G = split " ", $line;
 	    
 	    my $kval = substr($G[1],3,-1);
 	    my @vvals = @G[2 .. $#G];
 	    my $vvalstr = join(" ",@vvals);
 	    my $vval = substr($vvalstr,3,-3);
-	    #print STDERR "kval: $kval vval: $vval\n";
 	    if($kval =~ /^name$/){
 		#remove special characters?
 		#e.g. man&apos;s
@@ -156,12 +150,10 @@ while(<FA>){
 		$curname =~ s/\Q$feet\E//g;
 		$curname =~ s/\Q$em\E//g;
 		$curname =~ s/\Q$dd\E//g;
-		#$curname =~ s/\Q$mi\E//g;
 		$curname =~ s/\Q$us\E//g;
 		$curname =~ s/\Q$lt\E//g;
 		$curname =~ s/\Q$gt\E//g;
 		$curname =~ s/\Q$hash\E//g;
-		#$curname =~ s/\Q$spac\E//g;
 		$curname =~ s/\Q$and\E//g;
 		$curname =~ s/\Q$dollar\E//g;
 	    }
@@ -185,8 +177,6 @@ while(<FA>){
 	}
 	if($line =~ /way>$/){
 	    $wayopen = 0;
-#	    print STDERR "close way\n";
-#	    print STDERR "$curwid\t$curname\t$curtype\t$curspeed\t$curoneway\t$curref\t$curlit\n";
 	    if(($curtype eq "primary" || $curtype eq "secondary" || $curtype eq "tertiary" || $curtype eq "residential" || $curtype eq "unclassified" || $curtype eq "pedestrian") && $curname ne "NA" && $curname ne ""){
 		#write line in table
 		#	"StreetID\tStreetName\tStreetType\tMaxSpeed\tOneWay\tStreetRef\tStreetLit\tNumNodes\tNodeIDs\n";

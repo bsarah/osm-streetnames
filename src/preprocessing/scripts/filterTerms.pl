@@ -58,7 +58,6 @@ my $numthrow = 0;
 my $numjustcomplete = 0;
 
 open FA,"<$infile" or die "can't open $infile\n";
-#binmode FA, ':utf8';
 while(<FA>){
     chomp;
     my $line=$_;
@@ -93,7 +92,6 @@ print "number of streets filtered out: $numthrow\n";
 my %name2line = ();
 
 open FA2,"<$infile2" or die "can't open $infile2\n";
-#binmode FA, ':utf8';
 while(<FA2>){
     chomp;
     my $line=$_;
@@ -245,10 +243,6 @@ for(my $i=0;$i<scalar @terms;$i++){
 
 }
 
-
-
-
-#my $header = "term\tnumprefix\tnuminfix\tnumsuffix\tnumcomplete\tnumnames\toccurences\ttype_predictability\tmain_type\tav_length\tav_locality\tmp_locality\tmidPointLat\tMidPointLon\n";
 
 
 sub FlatDist{

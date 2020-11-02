@@ -19,8 +19,8 @@ my $outfile2 = shift;
 
 #infile format "StreetID\tStreetName\tStreetType\tMaxSpeed\tOneWay\tStreetRef\tStreetLit\tNumNodes\tNodeIDs\n";
 
-#last name = term, e.g. street, lane, road
-#pre name = name of the street, e.g., main, railway, einstein, maple
+#last name (generic) = term, e.g. street, lane, road
+#pre name (specific) = name of the street, e.g., main, railway, einstein, maple
 #my $header = "StreetID\tStreetName\tStreetPreName\tStreetLastName\tStreetType\tMaxSpeed\tOneWay\tStreetRef\tStreetLit\tNumNodes\tNodeIDs\n";
 
 #smaller input file: nameprops, streets with same name are summarized
@@ -36,13 +36,11 @@ print $outf $header;
 print $outf2 $header2;
 
 my %terms2num = (); #only put single terms and how often they appeared, thus only if split was possible
-#my @names = ();
 my %uniqsplits = ();#add sinlge words (no space or -) uniquely, also names that weren't split
 my $issplit = 0;
 my $numunsplit = 0;
 my $numsplit = 0;
 open FA,"<$infile" or die "can't open $infile\n";
-#binmode FA, ':utf8';
 while(<FA>){
     chomp;
     my $line=$_;
@@ -51,7 +49,6 @@ while(<FA>){
     my @F = split "\t", $line;
     my $street = lc($F[0]);
     my $occs = $F[1];
-#    push @names, lc($street);
     my @G = split " ", $street;
     if(scalar @G > 1){
 	$issplit = 1;
@@ -119,14 +116,12 @@ my %all2num = ();
 #store the remaining parts of the names, too
 my %suftokens2num = ();
 my %pretokens2num = ();
-#my %intokens2num = ();
 
 my @names = keys %uniqsplits;
 
 my @terms = keys %terms2num;
 for(my $i=0;$i<scalar @names;$i++){
     my $curname = $names[$i];
-    #print "$curname\n";
     my $curcount = $uniqsplits{$curname};
     for(my $t=0;$t<scalar @terms;$t++){
 	my $curterm = $terms[$t];
@@ -223,7 +218,6 @@ for(my $i=0;$i<scalar @names;$i++){
 	    }
 	}
 	else{#term is inside
-	    #print "inside term $curterm and outside tokens $curname\n";
 	    if(exists($interms2num{$curterm})){
 		$interms2num{$curterm}+=$curcount;
 	    }
@@ -295,17 +289,11 @@ for(my $i=0;$i<scalar @names;$i++){
     }
 }
 
-#my @inkeys = keys %intokens2num;
 my @prekeys = keys %pretokens2num;
 my @sufkeys = keys %suftokens2num;
-#my $inum = scalar @inkeys;
 my $pnum = scalar @prekeys;
 my $snum = scalar @sufkeys;
 
-
-
-#my $header = "term\tnumprefix\tnuminfix\tnumsuffix\tnumcomplete\tnumnames\n";
-#my $header2 = "token\tnumprefix\tnuminfix\tnumsuffix\n";
 
 my @tkeys = sort { $terms2num{$a} <=> $terms2num{$b} } keys(%terms2num);
 for(my $tk=scalar @tkeys-1;$tk>=0;$tk--){
@@ -324,12 +312,6 @@ for(my $tk=scalar @tkeys-1;$tk>=0;$tk--){
 
 
 #print new tokens based on splits that do not appear by themselves
-
-#my %suftokens2num = ();
-#my %pretokens2num = ();
-#my %intokens2num = ();
-
-#my %tokens2lines = ();
 my %tokens2num = ();
 foreach my $pt (keys %pretokens2num){
     if(exists($tokens2num{$pt})){
@@ -347,12 +329,6 @@ foreach my $st (keys %suftokens2num){
     else{
 	$tokens2num{$st}=$suftokens2num{$st};
     }
-#    if(exists($tokens2lines{$st})){
-#	$tokens2lines{$st} = "$tokens2lines{$st}\t$suftokens2num{$st}";
-#    }
-#    else{
-#	$tokens2lines{$st} = "$st\t0\t0\t$suftokens2num{$st}";
-#    }
 }
 
 
@@ -360,7 +336,6 @@ my @tokkeys = sort { $tokens2num{$a} <=> $tokens2num{$b} } (keys %tokens2num);
 for(my $to=scalar @tokkeys-1;$to>=0;$to--){
     binmode(STDOUT, ":utf8");
     my $curkey = $tokkeys[$to];
-#    if(exists($tokens2lines{$curkey})){
     my $numpret = 0;
     my $numsuft = 0;
     if(exists($pretokens2num{$curkey})){
@@ -370,17 +345,8 @@ for(my $to=scalar @tokkeys-1;$to>=0;$to--){
 	$numsuft = $suftokens2num{$curkey};
     }
     print $outf2 "$curkey\t$numpret\t$numsuft\n";
-#    }
-#    else{
-#	print "doesnt exist: $curkey\n";
-#    }
 }
-
-#my $toknum = scalar @tokkeys;
-#my $tlinnum = scalar (keys %tokens2lines);
 
 print "number of unsplit tokens: $numunsplit\n";
 print "number of split tokens: $numsplit\n";
-
-#print "numbers of tokens (p,i,s), all, tklines: $pnum $inum $snum $toknum $tlinnum\n";
 

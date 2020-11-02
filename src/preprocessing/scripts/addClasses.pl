@@ -33,7 +33,6 @@ my @S10 = split '\/', $infile;
 my @S1 = split '_', $S10[-1];
 my $numind = $S1[0];
 my @S1a = split '-', $S1[1];
-#print STDERR "country $S1[1]\n";
 my @names1 = @S1a[2 .. scalar @S1a-1];
 my $country = join('-',@names1);
 
@@ -63,7 +62,6 @@ my $avoccperc = 0;
 if($occsum > 0){
     $avoccperc = sprintf("%.5f",$avoccsum/$occsum);
 }
-#print "avmploc: $avmplocsum\nav avloc: $avavlocsum\nav occurence: $avoccsum\n percentage of average occurence: $avoccperc\n";
 
 print "$country\t$numind\t$avmplocsum\t$avavlocsum\t$avoccsum\t$avoccperc\n";
 

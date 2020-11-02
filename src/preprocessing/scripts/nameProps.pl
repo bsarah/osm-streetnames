@@ -92,17 +92,13 @@ while(<FB>){
     my $tmplonsum = 0;
     my $numpresentids = 0;
     for(my $t=0;$t<scalar @IDS;$t++){
-#	if(exists($id2lat{$IDS[$t]})){
-	    $tmplatsum += $id2lat{$IDS[$t]};
-	    $tmplonsum += $id2lon{$IDS[$t]};
-#	    $numpresentids++;
-	#}
+	$tmplatsum += $id2lat{$IDS[$t]};
+	$tmplonsum += $id2lon{$IDS[$t]};
     }
     my $tmpmidlon = sprintf("%.3f",$tmplonsum/(scalar @IDS));
     my $tmpmidlat = sprintf("%.3f",$tmplatsum/(scalar @IDS));
 
     my $tmpnumids = scalar @IDS;
-    #print STDERR "num: $tmpnumids lat: $tmpmidlat lon: $tmpmidlon \n";
     
     if($curname ne "" && $curname ne $name){
 	#finish that name and set a new one
@@ -113,7 +109,6 @@ while(<FB>){
 	    $numuniq++;	    
 	    my $outline = "$curname\t$curnum\t1\t$K[0]\t1\t$lens[0]\tNA\t$tmpmidlat\t$tmpmidlon\n";
 	    $name2line{$curname} = $outline;
-#	    print $outf $outline;
 	}
 	else{
 	    my $maxtype = "";
@@ -167,9 +162,7 @@ while(<FB>){
 	    }
 	    my $curmidlon = sprintf("%.3f",$lonsum/(scalar @lons));
 	    my $outline = "$curname\t$curnum\t$typeprec\t$maxtype\t$lenpred\t$avlen\t$avdist\t$curmidlat\t$curmidlon\n";
-	#    print "$outline";
 	    $name2line{$curname} = $outline;
-#	    print $outf $outline;
 	}
 	$curname = "";
 	$curnum = 0;
@@ -185,13 +178,6 @@ while(<FB>){
     my @G = split ',', $F[-1];
     #take always the first of ids
     my $curid = $G[0];
- #   for(my $g = 0;$g<scalar @G;$g++){
-#	if(exists($id2lat{$G[$g]})){
-#	    my $curid = $G[$g];
-#	    last;
-#	}
- #   }
- #   if($curid > -1){
     push @lats, $tmpmidlat;#$id2lat{$curid};
     push @lons, $tmpmidlon;#$id2lon{$curid};
     push @lens, $id2len{$curid};
@@ -204,7 +190,6 @@ while(<FB>){
     else{
 	$type2num{$ty}=1;
     }
- #   }
 }
 
 
@@ -226,7 +211,6 @@ if($curnum == 1){
     $numuniq++;	    
     my $outline = "$curname\t$curnum\t1\t$K[0]\t1\t$lens[0]\tNA\t$curmidlat\t$curmidlon\n";
     $name2line{$curname} = $outline;
-#    print $outf $outline;
 }
 else{
     my $maxtype = "";
@@ -271,9 +255,7 @@ else{
     if($avdist < $mindist){$mindist = $avdist;}
 
     my $outline = "$curname\t$curnum\t$typeprec\t$maxtype\t$lenpred\t$avlen\t$avdist\t$curmidlat\t$curmidlon\n";
-#    print "$outline";
     $name2line{$curname} = $outline;
-    #print $outf $outline;
 }
 print "number of streets: $numstreets\n";
 print "number of distinct street names: $numnames\n";
@@ -290,7 +272,6 @@ my @topnames = sort { $name2num{$a} <=> $name2num{$b} } keys(%name2num);
 for(my $t=scalar @topnames-1;$t>=0;$t--){
     my $nami = $topnames[$t];
     binmode(STDOUT, ":utf8");
-    #print "$nami\n";
     print $outf $name2line{$nami};
 }
 

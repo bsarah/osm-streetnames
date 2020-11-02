@@ -1,18 +1,26 @@
 #!/usr/bin/perl -w
 
 #call: preprocessing.pl inlist outfolder outfile
-
 #this program receives a list of url with files to download and then processes all the files and stores the resulting files in outfolder
 
+#input:
 #infile entries: download.geofabrik.de/europe/austria-latest.osm.pbf
 
-#outfile is a log of the run
+#outfolder: specify location where to store downloaded and processed files
+
+#outfile: a log file of the run
+
+#NOTE:
+#-this program stores intermediate temporary files in the current working directory which will be deleted at the end of the run
+#-this program needs osmium installed (this can be done using conda, create an environment and activate it)
+
 
 use Data::Dumper;
 use strict;
 use warnings;
 use utf8;
 binmode STDOUT, ':utf8';
+use File::Basename;
 
 
 
@@ -20,13 +28,13 @@ my $infile = shift;
 my $outfolder = shift;
 my $outfile = shift;
 #path to scripts
-my $scripts = "/homes/biertank/bsarah/Documents/projects/osm/scripts";
+my $dirname = dirname(__FILE__);
+my $scripts = "$dirname\/scripts";
 
 
 open(my $outf,">>",$outfile);
 
 open FA,"<$infile" or die "can't open $infile\n";
-#binmode FA, ':utf8';
 while(<FA>){
     chomp;
     my $line=$_;
@@ -111,7 +119,7 @@ while(<FA>){
     chomp(@out9b);
     print $outf "Classes for composed terms:\n";
     print $outf "$out9b[0]\n";
-    #rm cmds
+    #remove intermediate temporary files
     my $rmcmd = "rm $file $hfile $hfile2";
     readpipe("$rmcmd");
 }

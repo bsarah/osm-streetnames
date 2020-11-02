@@ -64,9 +64,7 @@ while(<FB>){
     my $centlat = "NA";
     my $centlon = "NA";
     my $middle = sprintf("%.0f",$len/2);
-    #print "mid: $middle len: $len\n";
     for(my $i=0;$i<scalar @P; $i++){
-	#print "curlat: $curlat curlon: $curlon distsum: $distsum\n";
 	if(exists($id2coord{$P[$i]})){
 	    my @N = split "\t", $id2coord{$P[$i]};
 	    if($curlat == -1 && $curlon == -1){
