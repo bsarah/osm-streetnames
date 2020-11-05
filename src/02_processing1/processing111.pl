@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-#call: perl processing111.pl 09alist infolder outputtable
+#call: perl processing111.pl 09alist infolder model outputtable
 
 #this program creates and processes the 11x files, that classify street terms based on european streets and the language identification tool
 
@@ -9,10 +9,10 @@ use strict;
 use warnings;
 use utf8;
 binmode STDOUT, ':utf8';
+use File::Basename;
 
 
-
-#workflow:
+#workflow done by this script:
 #concat 09a and 09b files
 #perl classifyTerms 09ab_northamerica eurofiles minocc 11a_prenames_out 11b_streetkinds_out 11c_unclassified_out
 #python testLanguage.py -i 11a -c 0 -o 111a
@@ -22,17 +22,18 @@ binmode STDOUT, ':utf8';
 
 my $inlist = shift;
 my $infolder = shift;
+my $model = shift; #path to fasttext model file
 my $outfile = shift;
 
 #path to scripts
-my $scripts = "/homes/biertank/bsarah/Documents/projects/osm/scripts";
+my $dirname = dirname(__FILE__);
+my $scripts = "$dirname\/scripts";
 
 open(my $outf,">>",$outfile);
 my $header= "Country\tnum11a\tnum11aCorrect\tperc11aCorrect\tnum11aNan\tperc11aNan\tnum11b\tnum11bCorrect\tperc11bCorrect\tnum11bNan\tperc11bNan\tnum11c\tnum11cNan\n";
 print $outf $header;
 
 open FA,"<$inlist" or die "can't open $inlist\n";
-#binmode FA, ':utf8';
 while(<FA>){
     chomp;
     #concatenate files
@@ -52,7 +53,6 @@ while(<FA>){
     print STDERR "$country\n";
     #09b_terms-in-alabama_nameprops_filtered_com.tsv
     my $bfile = "09b_$A[1]\_$A[2]\_$A[3]\_com.tsv";
-    print STDERR "$bfile\n";
     my $cfile = "09ab\_$country\.tsv";
     my $catcmd = "cat $infolder\/$afile $infolder\/$bfile >> $infolder\/$cfile";
     readpipe("$catcmd");
@@ -70,7 +70,7 @@ while(<FA>){
     my $out111a = "$infolder\/111a_classifyPrenames_$country\_alleuro_mino$minostr\.tsv";
     my $out111b = "$infolder\/111b_classifyKinds_$country\_alleuro_mino$minostr\.tsv";
     my $out111c = "$infolder\/111c_unclassified_$country\_alleuro_mino$minostr\.tsv";
-    my $py1cmd = "python $scripts/testLanguage.py -i $out11a -c 0 -o $out111a";
+    my $py1cmd = "python $scripts/testLanguage.py -i $out11a -m $model -c 0 -o $out111a";
     my @out1 = readpipe("$py1cmd");
     chomp(@out1);
     my @o11 = split " ", $out1[0];
@@ -79,7 +79,7 @@ while(<FA>){
     my @o14 = split " ", $out1[3];
     my @o15 = split " ", $out1[4];
     $outstr = "$outstr$o11[-1]\t$o12[-1]\t$o14[-1]\t$o13[-1]\t$o15[-1]\t";
-    my $py2cmd = "python $scripts/testLanguage.py -i $out11b -c 0 -o $out111b";
+    my $py2cmd = "python $scripts/testLanguage.py -i $out11b -m $model -c 0 -o $out111b";
     my @out2 = readpipe("$py2cmd");
     chomp(@out2);
     my @o21 = split " ", $out2[0];
@@ -88,7 +88,7 @@ while(<FA>){
     my @o24 = split " ", $out2[3];
     my @o25 = split " ", $out2[4];
     $outstr = "$outstr$o21[-1]\t$o22[-1]\t$o24[-1]\t$o23[-1]\t$o25[-1]\t";
-    my $py3cmd = "python $scripts/testLanguage.py -i $out11c -c 1 -o $out111c";
+    my $py3cmd = "python $scripts/testLanguage.py -i $out11c -m $model -c 1 -o $out111c";
     my @out3 = readpipe("$py3cmd");
     chomp(@out3);
     my @o31 = split " ", $out3[0];

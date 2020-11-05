@@ -1,0 +1,5 @@
+This script will use the extracted street specifics data in order to find European origins of street names.
+These results will be verified by the fasttext language identifier or, in case no European origin could be found, fasttext language identifier will try to identify the language.
+
+There, fasttext has to be installed, this can be done using conda.
+Additionally, a fasttext model has to be downloaded and specified.
