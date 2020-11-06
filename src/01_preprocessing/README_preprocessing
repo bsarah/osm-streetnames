@@ -1,0 +1,17 @@
+The perl script preprocessing.pl takes a list of links to osm files downloadable from geofabrik.org and processes their input such that
+- street names are extracted
+- information is stored in a table including street names, coordinates, country, street IDs and corresponding nodes on the map and further information
+- for each entry in the input file, there will be several output files in the given output folder containing information needed to further analyse the street names
+
+Requirements:
+- osmium-tool (possibly inside a conda environment)
+- perl5
+- python3
+
+This folder contains an example input file which contains links to maps in France.
+Please create an output folder, e.g. outfolder_france
+The script will write a log file as specified by the program call, here log_countries_france.txt
+
+The script can be called by:
+
+perl preprocessing.pl example_input_countries_france.txt outfolder_france log_countries_france.txt
