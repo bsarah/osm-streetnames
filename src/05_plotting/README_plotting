@@ -11,12 +11,25 @@ also relfect population densities.
 
 Requirements:
 - python3
-- basemap (can be installed using conda)
+- python basemap (can be installed using conda)
 
 
 Input:
-
+- a list of all files starting with 05andhalf that should be included in the analysis, for e.g. france, the files can be summarize by:
+ls france/05andhalf* > 05andhalf_france.txt (-i)
+- the current folder/working directory (-t)
+- the -a parameter is set to 1 for completeStreetDensity and set to 0 for originbasedStreetDensity
+- for originbasedStreetDensity, a file containing the streets to plot the density for has to be given as an input (-f)
 
 Output:
+- the plot as a pdf file will be given as an output (-o)
+- for originbasedStreetDensity, the coordinates of the mapped streets will be listed in another output file (-c)
 
 
+The script can be called by:
+
+completeStreetDensity:
+python ownDensityEurope.py -i 05andhalf_europe.txt -t ./ -a 1 -o densityplotEurope.pdf
+
+originbasedStreetDensity:
+python scripts/ownDensityNorthAmericaWithFile.py -i 05andhalf_NorthAmerica.txt -t ./ -a 0 -f 13_classifiedStreetsNorthAmerica_byAustria.tsv -c coordinates_byAustria.tsv -o densityPlotNorthAmerica_byAustria.pdf
