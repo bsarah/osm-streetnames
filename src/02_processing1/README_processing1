@@ -1,5 +1,24 @@
 This script will use the extracted street specifics data in order to find European origins of street names.
-These results will be verified by the fasttext language identifier or, in case no European origin could be found, fasttext language identifier will try to identify the language.
+These results will be verified by the fasttext language identifier or, in case no European origin could be found,
+fasttext language identifier will try to identify the language.
 
-There, fasttext has to be installed, this can be done using conda.
-Additionally, a fasttext model has to be downloaded and specified.
+
+Requirements:
+- fasttext has to be installed, this can be done using conda (https://fasttext.cc/)
+- download and save the fasttext model (https://fasttext.cc/docs/en/language-identification.html) called lid.176.bin
+- perl5
+- python3
+
+
+Input:
+1) a list of all 09a-files, the list has to be located in the same folder as the listed files
+(the 09a files are contained in the output of the previous step, preprocessing)
+2) the fasttext model
+
+Output:
+The output is a list for all countries/states in the input and corresponding numbers about how many street specifics
+were matched to European specifics, how many have been verified correctly and how many have been classified by the
+fasttext language classifier. See also publication for more details on the workflow.
+
+The script can be called by:
+perl processing111.pl infolder/list09afiles.txt lid.176.bin outfile.tsv
