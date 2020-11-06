@@ -1,0 +1,22 @@
+The folder contains scripts to plot street densities based on the results of the previous steps.
+
+There are two different kinds of plots:
+
+- completeStreetDensity: here, the script will plot the street densities for a complete country based on the osm data that is available.
+The resulting plots show nicely how streets are distributed inside a country. If there is a lot of data available within OSM, the street densities
+also relfect population densities.
+
+- originbasedStreetDensity: this script will plot street densities for streets with a given origin, i.e. only streets in North America with a french origin.
+
+
+Requirements:
+- python3
+- basemap (can be installed using conda)
+
+
+Input:
+
+
+Output:
+
+

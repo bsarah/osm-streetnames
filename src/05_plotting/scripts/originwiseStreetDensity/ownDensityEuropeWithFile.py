@@ -102,28 +102,14 @@ with open(inputfile) as f:
         streetsum += cursum
         alllats.extend(lats)
         alllons.extend(lons)
-        if min(lons) < minlon:
-            minlon = min(lons)
-        if max(lons) > maxlon:
-            maxlon = max(lons)
-        if min(lats) < minlat:
-            minlat = min(lats)
-        if max(lats) > maxlat:
-            maxlat = max(lats)
         #fill grid
         for i in range(len(lats)):
             curlat = lats[i]
             curlon = lons[i]
             intlat = int(abs(curlat*10))
             intlatrounded = int((intlat - intlat % 5)/10 * 2)
-            #intlatrounded2 = intlatrounded/10
-            #intlatrounded3 = intlatrounded2 * 2
-            intlon = int(abs(curlon*10))
+            intlon = int(abs((curlon+30)*10))
             intlonrounded = int((intlon - intlon % 5)/10 * 2)
-            #print(curlat,curlon)
-            #print(intlat,intlon)
-#            print(intlatrounded,intlonrounded)
-            #print(intlatrounded2,intlatrounded3)
             cgrid[intlatrounded][intlonrounded]+=1
 
 
@@ -140,23 +126,16 @@ for i in range(len(lats2)):
     curname = streetnames2[i]
     intlat = int(abs(curlat*10))
     intlatrounded = int((intlat - intlat % 5)/10 * 2)
-    #intlatrounded2 = intlatrounded/10
-    #intlatrounded3 = intlatrounded2 * 2
-    intlon = int(abs(curlon*10))
+    intlon = int(abs((curlon+30)*10))
     intlonrounded = int((intlon - intlon % 5)/10 * 2)
     coordkey = str(intlatrounded) + "_" + str(intlonrounded)
     realcoords = str(curlat) + "_" + str(curlon)
-#    print(coordkey)
     if coordkey in coord2names:
         coord2names[coordkey] = str(coord2names[coordkey]) + ";" + str(curname)
         coord2coords[coordkey] = str(coord2coords[coordkey]) + ";" + str(realcoords)
     else:
         coord2names[coordkey] = str(curname)
         coord2coords[coordkey] = str(realcoords)
-    #print(curlat,curlon)
-    #print(intlat,intlon)
-    #            print(intlatrounded,intlonrounded)
-    #print(intlatrounded2,intlatrounded3)
     sgrid[intlatrounded][intlonrounded]+=1
 
 dlen = len(coord2names)
@@ -178,34 +157,27 @@ ncgrid = np.zeros((latrange,lonrange))
 for i in range(latrange):
     for j in range(lonrange):
         if dostreets == 0:
-            ncgrid[179-i][359-j] = np.log(0.000005+cgrid[i][j]/streetsum) # ncgrid[89-i][179-j]
+            ncgrid[179-i][j] = np.log(0.000005+cgrid[i][j]/streetsum) # ncgrid[89-i][179-j]
         if dostreets == 1:
-            ncgrid[179-i][359-j] = np.log(0.000005)
+            ncgrid[179-i][j] = np.log(0.000005)
             if cgrid[i][j] > 0:
-                ncgrid[179-i][359-j] = np.log(0.000005 + sgrid[i][j]/cgrid[i][j])
-                if printcoords == 1 and sgrid[i][j]>2 and ncgrid[179-i][359-j] > -4:
+                ncgrid[179-i][j] = np.log(0.000005 + sgrid[i][j]/cgrid[i][j])
+                if printcoords == 1 and sgrid[i][j]>2 and ncgrid[179-i][j] > -4:
                     origlat = (i)/2
-                    origlon = (-1)*(j)/2
+                    origlon = (j)/2-20
                     coordkey = str(i) + "_" + str(j)
                     streetstr = ""
                     cstr = ""
                     if coordkey in coord2names:
                         streetstr = str(coord2names[coordkey])
                         cstr = str(coord2coords[coordkey])
-                    coordfile.write(str(origlat) + "\t" + str(origlon) + "\t" + str(sgrid[i][j]) + "\t" + str(cgrid[i][j]) + "\t" + str(ncgrid[179-i][359-j]) + "\t" + streetstr + "\t" + cstr)
+                    coordfile.write(str(origlat) + "\t" + str(origlon) + "\t" + str(sgrid[i][j]) + "\t" + str(cgrid[i][j]) + "\t" + str(ncgrid[179-i][j]) + "\t" + streetstr + "\t" + cstr)
                     coordfile.write("\n")
-#                    cs = coord2coords[coordkey].split(";")
-#                    for k in range(len(cs)):
-#                        ll = cs[k].split("_")
-#                        lats2plot.append(float(ll[0]))
-#                        lons2plot.append(float(ll[1]))
-
-            #ncgrid[89-i][179-j] = np.log(0.01+sgrid[i][j]/specstreetsum) + np.log(0.01+cgrid[i][j]/streetsum)
 
 
 #the projection is still not perfect but currently the best option
 #m=Basemap(projection='mill',llcrnrlon=-180, urcrnrlon=0,llcrnrlat=0,urcrnrlat=90)
-m=Basemap(projection='mill',llcrnrlon=-130, urcrnrlon=-60,llcrnrlat=15,urcrnrlat=55)
+m=Basemap(projection='mill',llcrnrlon=-30, urcrnrlon=30,llcrnrlat=35,urcrnrlat=70)
 m.drawparallels(np.arange(-90.,90.,15.),labels=[1,0,0,0],dashes=[2,2],color='gray',linewidth=0.2)
 m.drawmeridians(np.arange(-180.,180.,20.),labels=[0,0,0,1],dashes=[2,2],color='gray',linewidth=0.2)
 m.drawcoastlines(color='gray',linewidth=0.5)
@@ -213,12 +185,10 @@ m.drawstates(color='gray',linewidth=0.3)
 m.drawcountries(color='gray',linewidth=0.5)
 
 my_cmap = plt.get_cmap('rainbow')
-#if dostreets == 1:
-#    my_cmap = plt.get_cmap('YlOrRd')
 my_cmap.set_under('white')
 
 ylon = np.arange(90,0,-0.5)
-xlat = np.arange(-180,0,0.5)
+xlat = np.arange(-30,150,0.5)
 px ,py = np.meshgrid(xlat,ylon)
 x, y = m(px,py)
 
@@ -230,13 +200,5 @@ c = m.pcolormesh(x,y,ncgrid,cmap=my_cmap,vmin=minval)
 m.colorbar(c, extend = 'min')
 
 
-#for i in range(len(lats2plot)):
-#    xpt,ypt = m(lons2plot[i],lats2plot[i])
-#    col = 'blue' #--this are distance local clusters with mp in middle
-#    mar = 'o'
-#    m.plot(xpt, ypt,marker = mar, color = col, alpha=1, markersize = 0.1)
-
-
 plt.savefig( outputfile)
-#plt.show()
 plt.close('all')

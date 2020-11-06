@@ -22,8 +22,6 @@ def isRealSubstring(superstring, substring):
                 if ind > 1 and abs((ind+sblen)-cslen) != 1:
                     return True
     return False
-            #true for ind == 0 and lengths do not differ by 1
-            #true for ind > 1 and ind+len(substring) and len(superstring) do not differ by 1 
 
 
 parser = argparse.ArgumentParser()
@@ -148,35 +146,18 @@ with open(inputfile) as f:
         streetsum += cursum
         alllats.extend(lats)
         alllons.extend(lons)
-        #if min(lons) < minlon:
-        #    minlon = min(lons)
-        #if max(lons) > maxlon:
-        #    maxlon = max(lons)
-        #if min(lats) < minlat:
-        #    minlat = min(lats)
-        #if max(lats) > maxlat:
-        #    maxlat = max(lats)
         #fill grid
         for i in range(len(lats)):
             curlat = lats[i]
             curlon = lons[i]
-            #print(curlat,curlon)
             intlat = abs(int(curlat*10))           
             intlatrounded = int((intlat - intlat % 5)/10 * 2)
-            #intlatrounded2 = intlatrounded/10
-            #intlatrounded3 = intlatrounded2 * 2
             intlon = abs(int((curlon+30)*10))
-            #print(intlat,intlon)
             intlonrounded = int((intlon - intlon % 5)/10 * 2)
-            #print(curlat,curlon)
-            #print(intlat,intlon)
-#            print(intlatrounded,intlonrounded)
-            #print(intlatrounded2,intlatrounded3)
             cgrid[intlatrounded][intlonrounded]+=1
             if dostreets == 1:
                 for straat in streetstodo:
                     if isRealSubstring(streetnames[i],straat):
-                    #if str(streetnames[i]).find(str(straat)) != -1:
                         sgrid[intlatrounded][intlonrounded]+=1
                         specstreetsum+=1
                         if debuglist == 1:
@@ -197,9 +178,6 @@ ncgrid = np.zeros((latrange,lonrange))
 for i in range(latrange):
     for j in range(lonrange):
         if dostreets == 0:
-            #if cgrid[i][j] > 0:
-            #    ncgrid[179-i][j+20] = np.log(0.000005+cgrid[i][j]/streetsum) # ncgrid[89-i][179-j]
-            #else:
             ncgrid[179-i][j] = np.log(0.000005+cgrid[i][j]/streetsum) # ncgrid[89-i][179-j]
         if dostreets == 1:
             ncgrid[179-i][j] = np.log(0.000005)
@@ -215,7 +193,6 @@ for i in range(latrange):
 
 
 #the projection is still not perfect but currently the best option
-#m=Basemap(projection='mill',llcrnrlon=-30, urcrnrlon=150,llcrnrlat=0,urcrnrlat=90)
 m=Basemap(projection='mill',llcrnrlon=-30, urcrnrlon=30,llcrnrlat=35,urcrnrlat=70)
 m.drawparallels(np.arange(-90.,90.,15.),labels=[1,0,0,0],dashes=[2,2],color='gray',linewidth=0.2)
 m.drawmeridians(np.arange(-180.,180.,20.),labels=[0,0,0,1],dashes=[2,2],color='gray',linewidth=0.2)
@@ -242,5 +219,4 @@ m.colorbar(c, extend = 'min')
 
 
 plt.savefig( outputfile)
-#plt.show()
 plt.close('all')

@@ -22,11 +22,7 @@ def isRealSubstring(superstring, substring):
                 if ind > 1 and abs((ind+sblen)-cslen) != 1:
                     return True
     return False
-            #true for ind == 0 and lengths do not differ by 1
-            #true for ind > 1 and ind+len(substring) and len(superstring) do not differ by 1 
 
-
-#the densities should be based on the 05andhalf files!!!
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-i", "--infile")
@@ -164,19 +160,12 @@ with open(inputfile) as f:
             curlon = lons[i]
             intlat = int(abs(curlat*10))
             intlatrounded = int((intlat - intlat % 5)/10 * 2)
-            #intlatrounded2 = intlatrounded/10
-            #intlatrounded3 = intlatrounded2 * 2
             intlon = int(abs(curlon*10))
             intlonrounded = int((intlon - intlon % 5)/10 * 2)
-            #print(curlat,curlon)
-            #print(intlat,intlon)
-#            print(intlatrounded,intlonrounded)
-            #print(intlatrounded2,intlatrounded3)
             cgrid[intlatrounded][intlonrounded]+=1
             if dostreets == 1:
                 for straat in streetstodo:
                     if isRealSubstring(streetnames[i],straat):
-                    #if str(streetnames[i]).find(str(straat)) != -1:
                         sgrid[intlatrounded][intlonrounded]+=1
                         specstreetsum+=1
                         if debuglist == 1:
