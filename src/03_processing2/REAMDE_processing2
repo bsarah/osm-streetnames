@@ -1,0 +1,18 @@
+The second processing step will summarize files from the previous step and starts with the cluster detection.
+
+Requirements:
+- perl5
+
+
+Input:
+- a file that lists 111a files. The file has to include the path to the files, too. Thus, a line in the file might be: france/111a_alsace.tsv
+- the second input is the current folder, from which one can find the files and pathes specified in the input file.
+
+Output:
+- no output files have to be specified, the produced output will be stored in the same folder as the input files,
+thus in the case above, the ouput will be stored in the folder france.
+
+
+The script can be called by:
+perl processing112.pl list_111afiles_france.txt ./
+

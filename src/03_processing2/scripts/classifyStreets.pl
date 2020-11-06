@@ -25,11 +25,9 @@ use Math::Trig;
 
 my $infile4 = shift;
 my $infile11 = shift;
-#my $midoutfile = shift;
 my $outfile = shift;
 
 my %term2regions = ();
-#my %term2weights = ();
 my %term2num = ();
 
 open FB,"<$infile11" or die "can't open $infile11\n";
@@ -43,12 +41,6 @@ while(<FB>){
     $term2regions{$term} = $F[2];
 }
 
-#my %id2line = ();
-#my %id2lat = ();
-#my %id2lon = ();
-#my %id2cluster = (); #streetid to clusterid
-#my %id2regions = ();
-#my %id2weights = ();
 
 open(my $outf,">>",$outfile);
 
@@ -61,7 +53,7 @@ while(<FA>){
     my $sid = $F[0];
     my $sname = $F[1];
     my %c2num = (); #countries classifying the street name
-    #plsit by space and minus and fill results in G
+    #split by space and minus and fill results in G
     my @G = ();
     my @S = split " ", $sname;
     for(my $s = 0;$s<scalar @S;$s++){
@@ -94,19 +86,3 @@ while(<FA>){
     }
 }
 
-
-
-
-#my $numstreets = scalar (keys %id2line);
-#print "number of classified streets: $numstreets\n";
-##print exactly this to intermediate output file:
-#my $midheader = "StreetID\tStreetName\tStreetType\tMaxSpeed\tOneWay\tStreetRef\tStreetLit\tmedLat\tmedLon\tstreetLength\tNumNodes\tNodeIDs\tRegions\tWeights\n";
-#open(my $outmf,">>",$midoutfile);
-#print $outmf $midheader;
-#foreach my $sid (keys %id2line){
-#    my @regs = split "_", $id2regions{$sid};
-#    my @wes = split "_", $id2weights{$sid};
-#    for(my $i=0;$i<scalar @regs;$i++){
-#	print $outmf "$id2line{$sid}\t$regs[$i]\t$wes[$i]\n";
-#    }
-#}

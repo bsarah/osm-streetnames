@@ -16,8 +16,6 @@
 
 #summarize111ac
 #perl ../scripts/summarize111ac.pl 111a_classifyPrenames_quebec_alleuro_mino000001.tsv 111c_unclassified_quebec_alleuro_mino000001.tsv 112_classifiedTerms_quebec_alleuro_mino000001.tsv
-
-
 #classifyStreets
 #perl ../scripts/classifyStreets.pl 05andhalf_streets-in-quebec_dists_unique.tsv 112_classifiedTerms_quebec_alleuro_mino000001.tsv 12_classifiedStreets_quebec_alleuro_mino000001.tsv
 
@@ -27,15 +25,19 @@ use strict;
 use warnings;
 use utf8;
 binmode STDOUT, ':utf8';
+use File::Basename;
+
+
 
 my $inlist = shift;
 my $infolder = shift;
 
+
 #path to scripts
-my $scripts = "/homes/biertank/bsarah/Documents/projects/osm/scripts";
+my $dirname = dirname(__FILE__);
+my $scripts = "$dirname\/scripts";
 
 open FA,"<$inlist" or die "can't open $inlist\n";
-#binmode FA, ':utf8';
 while(<FA>){
     chomp;
     #get corresponding files
