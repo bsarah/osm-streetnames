@@ -1,0 +1,31 @@
+This script will collect the street mappings and classifications for a whole country based on the
+output of the previous processing steps.
+
+As an example, consider the folder france, thus osm files for France have been downloaded and preprocessed (step01),
+specifics have been mapped, and verified or classified by fasttext (step02) and files have been summarized and
+cluster detection has been done (step03).
+Now, the folder france contains a large number of files, whereas the file names start with numbers, here 03xx up to 12xx.
+Every filename additionally contains the country/state/region such that the order of the numbers shows the order of how the files have been produced.
+
+
+Of course, France is only an example. We can also have complete Europe, North America or Africa where we collect the 12xx files for and proceed.
+
+
+Requirements:
+- perl5
+- For this step, the 12xx files are needed. Here, we now list all the 12xx files for the complete folder france by:
+ls france/12_* > 12_classifiedStreetsFrance.txt
+This file will be the input file for the current step.
+
+
+Further input:
+- the current working directory
+- the country we want to get the streets from
+
+
+Output:
+- the call below will output a list of street names in France that have been mapped or classified to be of Austrian origin.
+
+The script can be called by:
+perl getStreetsByCountry.pl 12_classifiedStreetsFrance.txt ./ austria 13_classifiedStreetsFrance_byAustria_alleuro_mino000001.tsv
+

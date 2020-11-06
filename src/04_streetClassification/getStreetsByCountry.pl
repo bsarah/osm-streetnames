@@ -4,7 +4,7 @@
 
 #this program goes through all classified streets of north america and collects all entries of streets that were classified to a given european country
 
-#12x file format:
+#12xxx file format:
 #StreetID StreetName StreetType MaxSpeed OneWay StreetRef StreetLit midPointLat midPointLon streetLength NumNodes NodeIDs StreetIDs numMatches Countries
 
 
@@ -28,9 +28,6 @@ my $outfile = shift;
 
 open(my $outf,">>",$outfile);
 
-#my $numtot = 0;
-#my $numcur = 0;
-
 my $hasheader = 0;
 
 open FB,"<$inlist" or die "can't open $inlist\n";
@@ -51,7 +48,6 @@ while(<FB>){
 	    }
 	    next;
 	}
-	#$numtot+=1;
 	my @F = split "\t", $line;
 	my $streetname = $F[1];
 	if($streetname =~ /[0-9]+/){next;}
@@ -59,11 +55,8 @@ while(<FB>){
 	for(my $i=0;$i<scalar @L;$i++){
 	    if($L[$i] eq $country){
 		print $outf "$line\t$state\n";
-		#$numcur+=1;
 	    }
 	}
     }
 }
 
-#print "Total number of streets: $numtot\n";
-#print "Selected number of streets: $numcur\n";
